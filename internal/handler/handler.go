@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	calc "github.com/hwtdspprcmpltl/calcyandex/internal"
+	"github.com/hwtdspprcmpltl/calcyandex/internal/calc"
 )
 
 type PostRequest struct {
