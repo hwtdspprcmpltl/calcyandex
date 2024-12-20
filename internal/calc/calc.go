@@ -1,13 +1,23 @@
 package calc
 
 import (
-	"fmt"
+	"errors"
 	"strconv"
 )
 
 type operator struct {
 	Symbol   string
 	Priority int
+}
+
+var Errors = struct {
+	DivisionByZero        error
+	MismatchedParentheses error
+	InvalidExpression     error
+}{
+	DivisionByZero:        errors.New("деление на ноль"),
+	MismatchedParentheses: errors.New("ошибка в расставлении скобок"),
+	InvalidExpression:     errors.New("неправильное выражение"),
 }
 
 var operators = map[string]operator{
@@ -63,11 +73,11 @@ func toRPN(expression string) ([]string, error) {
 				stack = stack[:len(stack)-1]
 			}
 			if len(stack) == 0 {
-				return nil, fmt.Errorf("mismatched parentheses")
+				return nil, Errors.MismatchedParentheses
 			}
 			stack = stack[:len(stack)-1]
 		} else {
-			return nil, fmt.Errorf("invalid transformed exp: %s", char)
+			return nil, Errors.InvalidExpression
 		}
 	}
 	for len(stack) > 0 {
@@ -87,7 +97,7 @@ func caclulateRPN(output []string) (float64, error) {
 		}
 		if op, exists := operators[char]; exists {
 			if len(stack) < 2 {
-				return 0, fmt.Errorf("invalid expression")
+				return 0, Errors.InvalidExpression
 			}
 			a := stack[len(stack)-2]
 			b := stack[len(stack)-1]
@@ -103,15 +113,15 @@ func caclulateRPN(output []string) (float64, error) {
 				if b != 0 {
 					stack = append(stack, a/b)
 				} else {
-					return 0, fmt.Errorf("division by zero")
+					return 0, Errors.DivisionByZero
 				}
 			default:
-				return 0, fmt.Errorf("unknown operator")
+				return 0, Errors.InvalidExpression
 			}
 		}
 	}
 	if len(stack) != 1 {
-		return 0, fmt.Errorf("invalid expression")
+		return 0, Errors.InvalidExpression
 	}
 	return float64(stack[0]), nil
 
