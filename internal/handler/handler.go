@@ -17,6 +17,12 @@ type HTTPAnswer struct {
 }
 
 func HandleCalculator(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/api/v1/calculate" {
+		w.WriteHeader(http.StatusNotFound)
+		answer := HTTPAnswer{Error: "неправильный путь"}
+		json.NewEncoder(w).Encode(answer)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method != http.MethodPost {

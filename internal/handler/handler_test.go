@@ -16,7 +16,7 @@ const (
 
 func setupRouter() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/v1/calculate", handler.HandleCalculator)
+	mux.HandleFunc("/", handler.HandleCalculator)
 	return mux
 }
 
@@ -62,6 +62,6 @@ func TestHandleCalculator_CalculationErrors(t *testing.T) {
 }
 
 func TestHandleCalculator_CalcilationErrors(t *testing.T) {
-	testHandler(t, http.MethodPost, `{"expression": "1+20"}`, http.StatusNotFound, "404 page not found", "/wrong/endpoint")
-	testHandler(t, http.MethodPost, `{"expression": "1+0"}`, http.StatusNotFound, "404 page not found", "/api/v2/sdfgdgdfge")
+	testHandler(t, http.MethodPost, `{"expression": "1+20"}`, http.StatusNotFound, `{"error":"неправильный путь"}`, "/wrong/endpoint")
+	testHandler(t, http.MethodPost, `{"expression": "1+0"}`, http.StatusNotFound, `{"error":"неправильный путь"}`, "/api/v2/sdfgdgdfge")
 }

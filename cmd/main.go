@@ -12,7 +12,7 @@ import (
 //curl --location http://localhost:8080 --header "Content-Type: application/json" --data "{\"expression\": \"2+2*2\"}"
 
 func main() {
-	http.HandleFunc("/api/v1/calculate", handler.HandleCalculator)
+	http.HandleFunc("/", handler.HandleCalculator)
 
 	port := flag.Int("port", 8080, "Port to run the server on")
 
